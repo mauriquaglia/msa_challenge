@@ -127,7 +127,7 @@ async def root():
             equipment=x['equipment']).dict())
    
     result = append('', True)
-    db.exercises.insert_many(result)
+    #db.exercises.insert_many(result)
     return {"message": time() - start, "count": counter}
 
 @app.get("/import_category/{name}")
