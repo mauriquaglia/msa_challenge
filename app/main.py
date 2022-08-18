@@ -3,7 +3,6 @@ from typing import List
 from pymongo import MongoClient
 from bson import ObjectId
 from pydantic import BaseModel, Field
-#from dependencies import settings
 
 from time import time
 import httpx
@@ -13,6 +12,7 @@ import random
 from bson.json_util import dumps, loads
 import math
 import datetime
+import os
 
 class PyObjectId(ObjectId):
     @classmethod
@@ -102,8 +102,9 @@ async def task(url = "https://wger.de/api/v2/exerciseinfo/?limit=1"):
         return result
         #print(result)
 
-mongodb_uri = 'mongodb://localhost/?readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=false'
-port = 27017  
+db_host = os.environ.get('DB_HOST', 'localhost')
+mongodb_uri = 'mongodb://' + db_host + '/?readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=false'
+port = os.environ.get('DB_PORT', 27017)  
 
 client = MongoClient(mongodb_uri, port)
 db = client['msa']
