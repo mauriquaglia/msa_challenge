@@ -102,8 +102,7 @@ async def task(url = "https://wger.de/api/v2/exerciseinfo/?limit=1"):
         return result
         #print(result)
 
-db_host = os.environ.get('DB_HOST', 'localhost')
-mongodb_uri = 'mongodb://' + db_host + '/?readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=false'
+mongodb_uri = 'mongodb://' + os.environ.get('DB_HOST', 'localhost') + '/?readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=false'
 port = os.environ.get('DB_PORT', 27017)  
 
 client = MongoClient(mongodb_uri, port)
