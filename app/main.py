@@ -129,7 +129,7 @@ async def root():
    
     result = append('', True)
     #db.exercises.insert_many(result)
-    return {"message": time() - start, "count": counter, "check": db_host}
+    return {"message": time() - start, "count": counter, "check": os.environ.get('DB_HOST', 'localhost')}
 
 @app.get("/import_category/{name}")
 async def import_category(name: str):
