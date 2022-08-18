@@ -64,6 +64,11 @@ GitHub: https://github.com/mauriquaglia/msa_challenge
 
 Implmentado en Docker de Cloud Run (Google Cloud)
 
+Requiere las siguietnes variables de entorno:
+DB_USER
+DB_PASS
+DB_HOST
+
 """
 
 app = FastAPI(
