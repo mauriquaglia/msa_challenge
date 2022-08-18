@@ -3,7 +3,7 @@ from typing import List
 from pymongo import MongoClient
 from bson import ObjectId
 from pydantic import BaseModel, Field
-from dependencies import settings
+#from dependencies import settings
 
 from time import time
 import httpx
@@ -102,7 +102,10 @@ async def task(url = "https://wger.de/api/v2/exerciseinfo/?limit=1"):
         return result
         #print(result)
 
-client = MongoClient(settings.mongodb_uri, settings.port)
+mongodb_uri = 'mongodb://localhost/?readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=false'
+port = 27017  
+
+client = MongoClient(mongodb_uri, port)
 db = client['msa']
 
 @app.get("/")
