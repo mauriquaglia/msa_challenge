@@ -3,7 +3,7 @@ from typing import List
 from pymongo import MongoClient
 from bson import ObjectId
 from pydantic import BaseModel, Field
-import settings
+from dependencies import settings
 
 from time import time
 import httpx
