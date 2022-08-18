@@ -31,33 +31,14 @@ class PyObjectId(ObjectId):
         field_schema.update(type="string")
 
 class Muscles(BaseModel):
-	name: str
+    id: int
+    name: str
 
 class Equipment(BaseModel):
-	name: str
+    id: int
+    name: str
 
 class Exercises(BaseModel):
-    name: str
-    description: str
-    muscles: List[Muscles] = []
-    equipment: List[Equipment] = []
-
-class Category(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    category: str = ""
-    exercises: List[Exercises] = []
-
-category = Category()
-
-class Muscles2(BaseModel):
-    id: int
-    name: str
-
-class Equipment2(BaseModel):
-    id: int
-    name: str
-
-class Exercises2(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     name: str
     description: str
@@ -74,13 +55,7 @@ def append(x, get = False):
     if get == False : objeto.append(x)
     if get == True : 
         return objeto
-    else: return False
-
-def create_obj(name, category):
-    category.category = name
-    category.exercises = category.exercises
-    return category.dict()
-    
+    else: return False    
 
 app = FastAPI()
 
@@ -115,25 +90,8 @@ db = client['msa']
 async def root():
     try:
         start = time()
-        count = await task()
-        count = count[0]['count']
-        counter = 0
-        result = await task("https://wger.de/api/v2/exerciseinfo/?limit="+str(count))
-
-        for x in result[0]['results']:
-            if x['category']['name'] == 'Abs': 
-                counter=counter+1
-                append(Exercises2(name= x['name'], 
-                description= x['description'], 
-                category=x['category']['name'], 
-                id_category=x['category']['id'] ,
-                muscles=x['muscles'],
-                equipment=x['equipment']).dict())
-    
-        result = append('', True)
-        #db.exercises.insert_many(result)
         logging.info('GET /')
-        return {"message": time() - start, "count": counter}
+        return {"message": "OK", "time": time() - start}
     except Exception as ex:
         logging.exception(ex)
         raise
@@ -150,7 +108,7 @@ async def import_category(name: str):
         for x in result[0]['results']:
             if x['category']['name'] == name: 
                 counter=counter+1
-                append(Exercises2(name= x['name'], 
+                append(Exercises(name= x['name'], 
                 description= x['description'], 
                 category=x['category']['name'], 
                 id_category=x['category']['id'] ,
@@ -167,22 +125,6 @@ async def import_category(name: str):
         logging.exception(ex)
         raise
 
-
-@app.put("/import_category2/{name}")
-async def import_category2(name: str, category: Category):
-    try:
-        #print("ver {recuento} ")
-        if (recuento :=  db.data.find_one({"category": name})) is not None:
-            raise HTTPException(status_code=400, detail="La categoria " + name + " ya existe")
-        data = create_obj(name, category)
-        db.data.insert_one(data)
-        logging.info('GET /import_category/' + name)
-        return {"name": name, "category": category}
-    except Exception as ex:
-        logging.exception(ex)
-        raise
-
-
 @app.get("/get_routine/{days}")
 async def get_routine(days: int):
     try:
@@ -197,8 +139,8 @@ async def get_routine(days: int):
             var = loads(dumps(db.exercises.find({"category": categorys[(x+1) % len(categorys)]}).limit(10)))
             var = random.sample( var, len(var) )
             for i in range(3) :
-                #exercises_of_categorys.append({"name": var[i]['name'], "description": var[i]['description'], "muscles": var[i]['muscles'], "equipment": var[i]['equipment'] })
-                exercises_of_categorys.append({"category": var[i]['category'], "name": var[i]['name'] })
+                exercises_of_categorys.append({"name": var[i]['name'], "description": var[i]['description'], "muscles": var[i]['muscles'], "equipment": var[i]['equipment'] })
+                #exercises_of_categorys.append({"category": var[i]['category'], "name": var[i]['name'] })
 
             categorys_of_day.append({"category": categorys[(x+1) % len(categorys)], "exercises": exercises_of_categorys})
             exercises_of_categorys = []
