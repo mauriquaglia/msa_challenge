@@ -102,10 +102,16 @@ async def task(url = "https://wger.de/api/v2/exerciseinfo/?limit=1"):
         return result
         #print(result)
 
-mongodb_uri = 'mongodb://' + os.environ.get('DB_HOST', 'localhost') + '/?readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=false'
-port = os.environ.get('DB_PORT', 27017)  
 
-client = MongoClient(mongodb_uri, port)
+
+mongo_user = os.environ.get('DB_USER', 'user')
+mongo_pass = os.environ.get('DB_PASS', 'pass')
+mongo_host = os.environ.get('DB_HOST', 'cluster.com')
+
+mongodb_uri = 'mongodb+srv://' + mongo_user + ':' + mongo_pass + '@' + mongo_host + '/?retryWrites=true&w=majority'
+
+#client = MongoClient(mongodb_uri, port)
+client = MongoClient(mongodb_uri)
 db = client['msa']
 
 @app.get("/")
@@ -128,7 +134,7 @@ async def root():
    
     result = append('', True)
     #db.exercises.insert_many(result)
-    return {"message": time() - start, "count": counter, "check": os.environ.get('DB_HOST', 'localhost')}
+    return {"message": time() - start, "count": counter}
 
 @app.get("/import_category/{name}")
 async def import_category(name: str):
