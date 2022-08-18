@@ -57,7 +57,25 @@ def append(x, get = False):
         return objeto
     else: return False    
 
-app = FastAPI()
+description = """
+MAS Challenge Pthyton API . 🚀
+
+GitHub: https://github.com/mauriquaglia/msa_challenge
+
+Implmentado en Docker de Cloud Run (Google Cloud)
+
+"""
+
+app = FastAPI(
+    title="MSA Challenge Api",
+    description=description,
+    version="0.0.1",
+    contact={
+        "name": "Mauricio Quaglia",
+        "url": "https://ideandosoft.com/",
+        "email": "mauriquaglia@gmail.com",
+    },
+)
 
 
 async def request(client, URL):
@@ -87,7 +105,7 @@ client = MongoClient(mongodb_uri)
 db = client['msa']
 
 @app.get("/")
-async def root():
+async def test_servvice():
     try:
         start = time()
         logging.info('GET /')
